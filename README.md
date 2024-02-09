@@ -4,6 +4,7 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/matthewpageuk/laravel-bitty-enums/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/matthewpageuk/laravel-bitty-enums/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/matthewpageuk/laravel-bitty-enums/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/matthewpageuk/laravel-bitty-enums/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/matthewpageuk/laravel-bitty-enums.svg?style=flat-square)](https://packagist.org/packages/matthewpageuk/laravel-bitty-enums)
+[![GitHub Issues](https://img.shields.io/github/issues/matthewpageuk/laravel-bitty-enums)](https://github.com/matthewpageuk/laravel-bitty-enums/issues)
 
 This package helps you use bitty enums in your Laravel application if you choose to, think before you do... It provides an Enum Container, a Trait for your model queries and a Model Cast.
 

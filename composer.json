@@ -1,6 +1,6 @@
 {
     "name": "matthewpageuk/laravel-bitty-enums",
-    "description": "This package helps you use bitty enums",
+    "description": "This package helps you use bitwise enums in PHP and Laravel.",
     "keywords": [
         "Matthew Page",
         "laravel",
