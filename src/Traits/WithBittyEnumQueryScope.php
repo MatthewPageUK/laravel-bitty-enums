@@ -2,7 +2,8 @@
 
 namespace MatthewPageUK\BittyEnums\Traits;
 
-use MatthewPageUK\BittyEnums\BittyEnumContainer;
+use Illuminate\Database\Eloquent\Builder;
+use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
 use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 
 trait WithBittyEnumQueryScope
@@ -10,28 +11,65 @@ trait WithBittyEnumQueryScope
     /**
      * Scope a query to only include records with a specific bitty enum value.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $column
      * @param BittyEnum $choice
      * @todo
      */
-    public function scopeWhereBittyEnumHas($query, $column, BittyEnum $choice)
+    public function scopeWhereBittyEnumHas(Builder $query, string $column, BittyEnum $choice): Builder
     {
-        // check casts to match choice to enum class...
-        return $query->whereRaw("({$column} & {$choice->value}) = {$choice->value}");
+        return $query->whereRaw(
+            sprintf('(%s & %d) = %d', $column, (int) $choice->value, (int) $choice->value)
+        );
+
+        // Why does this not work?
+        // return $query->whereRaw('(:col & :val) = :val', ['col' => $column, 'val' => $choice->value]);
+    }
+
+    /**
+     * Scope the query to only include records that don't have a specific bitty enum value.
+     *
+     * @param Builder $query
+     * @param string $column
+     * @param BittyEnum $choice
+     * @return Builder
+     */
+    public function scopeWhereBittyEnumDoesntHave(Builder $query, string $column, BittyEnum $choice): Builder
+    {
+        return $query->whereRaw(
+            sprintf('(%s & %d) = 0', $column, (int) $choice->value)
+        );
+    }
+
+    /**
+     * Scope the query to only include records that do not have any of the
+     * bitty enum values in the provided container.
+     *
+     * @param Builder $query
+     * @param string $column
+     * @param BittyContainer $choices
+     * @return Builder
+     */
+    public function scopeWhereBittyEnumDoesntHaveAny(Builder $query, string $column, BittyContainer $choices): Builder
+    {
+        return $query->whereRaw(
+            sprintf('(%s & %d) = 0', $column, (int) $choices->getValue())
+        );
     }
 
     /**
      * Scope a query to only include records with any of the
      * bitty enum values in the provided container.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $column
-     * @param BittyEnumContainer $choices
+     * @param BittyContainer $choices
      */
-    public function scopeWhereBittyEnumHasAny($query, $column, BittyEnumContainer $choices)
+    public function scopeWhereBittyEnumHasAny(Builder $query, string $column, BittyContainer $choices): Builder
     {
-        return $query->whereRaw("({$column} & {$choices->getValue()}) > 0");
+        return $query->whereRaw(
+            sprintf('(%s & %d) > 0', $column, (int) $choices->getValue())
+        );
     }
 
     /**
@@ -40,10 +78,12 @@ trait WithBittyEnumQueryScope
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string $column
-     * @param BittyEnumContainer $choices
+     * @param BittyContainer $choices
      */
-    public function scopeWhereBittyEnumHasAll($query, $column, BittyEnumContainer $choices)
+    public function scopeWhereBittyEnumHasAll($query, $column, BittyContainer $choices)
     {
-        return $query->whereRaw("({$column} & {$choices->getValue()}) = {$choices->getValue()}");
+        return $query->whereRaw(
+            sprintf('(%s & %d) = %d', $column, (int) $choices->getValue(), (int) $choices->getValue())
+        );
     }
 }

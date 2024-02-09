@@ -4,7 +4,7 @@ namespace MatthewPageUK\BittyEnums\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use MatthewPageUK\BittyEnums\BittyEnumContainer;
+use MatthewPageUK\BittyEnums\Support\Container as BittyEnumContainer;
 
 class BittyEnumCast implements CastsAttributes
 {

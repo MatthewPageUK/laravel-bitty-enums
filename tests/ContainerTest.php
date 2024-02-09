@@ -1,6 +1,6 @@
 <?php
 
-use MatthewPageUK\BittyEnums\BittyEnumContainer;
+use MatthewPageUK\BittyEnums\Support\Container as BittyEnumContainer;
 use MatthewPageUK\BittyEnums\Tests\Enums\Bad\BadValue;
 use MatthewPageUK\BittyEnums\Tests\Enums\Bad\NoInterface;
 use MatthewPageUK\BittyEnums\Tests\Enums\Bad\TooManyCases;
@@ -99,3 +99,7 @@ it('can set all values', function () {
 
     expect($container->getValue())->toBe($total);
 });
+
+// it('can call console command', function () {
+//     $this->artisan('laravel-bitty-enums')->assertSuccessful();
+// });

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
-use MatthewPageUK\BittyEnums\BittyEnumContainer;
+use MatthewPageUK\BittyEnums\Support\Container as BittyEnumContainer;
 use MatthewPageUK\BittyEnums\Tests\Enums\Good\Colour;
 use Tests\Models\Product;
 
