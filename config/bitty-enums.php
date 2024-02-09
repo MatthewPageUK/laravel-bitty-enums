@@ -1,6 +1,6 @@
 <?php
 
-// config for MatthewPageUK/BitwiseEnums
+// config for MatthewPageUK/BittyEnums
 return [
     'accepted' => [
         MyEnum::class,

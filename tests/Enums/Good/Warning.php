@@ -1,10 +1,10 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Tests\Enums\Good;
+namespace MatthewPageUK\BittyEnums\Tests\Enums\Good;
 
-use MatthewPageUK\BitwiseEnums\Contracts\BitwiseEnum;
+use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 
-enum Warning: int implements BitwiseEnum
+enum Warning: int implements BittyEnum
 {
     case LowFuel        = 1;
     case CheckEngine    = 2;

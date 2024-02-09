@@ -1,21 +1,21 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Traits;
+namespace MatthewPageUK\BittyEnums\Traits;
 
-use MatthewPageUK\BitwiseEnums\BitwiseEnumContainer;
-use MatthewPageUK\BitwiseEnums\Contracts\BitwiseEnum;
+use MatthewPageUK\BittyEnums\BittyEnumContainer;
+use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 
-trait WithBitwiseEnumQueryScope
+trait WithBittyEnumQueryScope
 {
     /**
-     * Scope a query to only include records with a specific bitwise enum value.
+     * Scope a query to only include records with a specific bitty enum value.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string $column
-     * @param BitwiseEnum $choice
+     * @param BittyEnum $choice
      * @todo
      */
-    public function scopeWhereBitwiseEnumHas($query, $column, BitwiseEnum $choice)
+    public function scopeWhereBittyEnumHas($query, $column, BittyEnum $choice)
     {
         // check casts to match choice to enum class...
         return $query->whereRaw("({$column} & {$choice->value}) = {$choice->value}");
@@ -23,26 +23,26 @@ trait WithBitwiseEnumQueryScope
 
     /**
      * Scope a query to only include records with any of the
-     * bitwise enum values in the provided container.
+     * bitty enum values in the provided container.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string $column
-     * @param BitwiseEnumContainer $choices
+     * @param BittyEnumContainer $choices
      */
-    public function scopeWhereBitwiseEnumHasAny($query, $column, BitwiseEnumContainer $choices)
+    public function scopeWhereBittyEnumHasAny($query, $column, BittyEnumContainer $choices)
     {
         return $query->whereRaw("({$column} & {$choices->getValue()}) > 0");
     }
 
     /**
      * Scope a query to only include records with all of the
-     * bitwise enum values in the provided container.
+     * bitty enum values in the provided container.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string $column
-     * @param BitwiseEnumContainer $choices
+     * @param BittyEnumContainer $choices
      */
-    public function scopeWhereBitwiseEnumHasAll($query, $column, BitwiseEnumContainer $choices)
+    public function scopeWhereBittyEnumHasAll($query, $column, BittyEnumContainer $choices)
     {
         return $query->whereRaw("({$column} & {$choices->getValue()}) = {$choices->getValue()}");
     }

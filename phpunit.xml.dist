@@ -16,7 +16,7 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name="MatthewPageUK Bitwise Enums Test Suite">
+        <testsuite name="MatthewPageUK Bitty Enums Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

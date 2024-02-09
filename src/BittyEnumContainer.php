@@ -1,10 +1,10 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums;
+namespace MatthewPageUK\BittyEnums;
 
-use MatthewPageUK\BitwiseEnums\Contracts\BitwiseEnum;
+use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 
-class BitwiseEnumContainer
+class BittyEnumContainer
 {
     public function __construct(
         protected string $enumClass,
@@ -17,8 +17,8 @@ class BitwiseEnumContainer
 
     protected function validateEnumClass(string $class): self
     {
-        if (! is_a($class, BitwiseEnum::class, true)) {
-            throw new \InvalidArgumentException("Invalid enum - not a BitwiseEnum Interface: {$class}");
+        if (! is_a($class, BittyEnum::class, true)) {
+            throw new \InvalidArgumentException("Invalid enum - not a BittyEnum Interface: {$class}");
         }
 
         if (count($class::cases()) > 16) {
@@ -53,7 +53,7 @@ class BitwiseEnumContainer
         return ($value & ($value - 1)) === 0;
     }
 
-    public function set(BitwiseEnum $choice): self
+    public function set(BittyEnum $choice): self
     {
         $this->validateChoice($choice);
         $this->selected |= $choice->value;
@@ -61,7 +61,7 @@ class BitwiseEnumContainer
         return $this;
     }
 
-    public function unset(BitwiseEnum $choice): self
+    public function unset(BittyEnum $choice): self
     {
         $this->validateChoice($choice);
         $this->selected &= ~$choice->value;
@@ -69,7 +69,7 @@ class BitwiseEnumContainer
         return $this;
     }
 
-    public function has(BitwiseEnum $choice): bool
+    public function has(BittyEnum $choice): bool
     {
         $this->validateChoice($choice);
 

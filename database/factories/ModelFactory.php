@@ -1,6 +1,6 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Database\Factories;
+namespace MatthewPageUK\BittyEnums\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

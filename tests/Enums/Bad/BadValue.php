@@ -1,10 +1,10 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Tests\Enums\Bad;
+namespace MatthewPageUK\BittyEnums\Tests\Enums\Bad;
 
-use MatthewPageUK\BitwiseEnums\Contracts\BitwiseEnum;
+use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 
-enum BadValue: int implements BitwiseEnum
+enum BadValue: int implements BittyEnum
 {
     case Red    = 1;
     case Green  = 2;

@@ -1,12 +1,12 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Tests;
+namespace MatthewPageUK\BittyEnums\Tests;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
-use MatthewPageUK\BitwiseEnums\BitwiseEnumsServiceProvider;
+use MatthewPageUK\BittyEnums\BittyEnumsServiceProvider;
 use Tests\Models\Product;
 
 class TestCase extends Orchestra
@@ -25,7 +25,7 @@ class TestCase extends Orchestra
         $this->seedDatabase();
 
         // Factory::guessFactoryNamesUsing(
-        //     fn (string $modelName) => 'MatthewPageUK\\BitwiseEnums\\Database\\Factories\\'.class_basename($modelName).'Factory'
+        //     fn (string $modelName) => 'MatthewPageUK\\BittyEnums\\Database\\Factories\\'.class_basename($modelName).'Factory'
         // );
     }
 
@@ -55,7 +55,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            BitwiseEnumsServiceProvider::class,
+            BittyEnumsServiceProvider::class,
         ];
     }
 
@@ -64,7 +64,7 @@ class TestCase extends Orchestra
         config()->set('database.default', 'testing');
 
         /*
-        $migration = include __DIR__.'/../database/migrations/create_laravel-bitwise-enums_table.php.stub';
+        $migration = include __DIR__.'/../database/migrations/create_laravel-bitty-enums_table.php.stub';
         $migration->up();
         */
     }

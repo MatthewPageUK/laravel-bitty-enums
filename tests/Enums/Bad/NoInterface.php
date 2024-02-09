@@ -1,6 +1,6 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Tests\Enums\Bad;
+namespace MatthewPageUK\BittyEnums\Tests\Enums\Bad;
 
 enum NoInterface: int   // <-- missing interface
 {

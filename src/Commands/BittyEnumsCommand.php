@@ -1,12 +1,12 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Commands;
+namespace MatthewPageUK\BittyEnums\Commands;
 
 use Illuminate\Console\Command;
 
-class BitwiseEnumsCommand extends Command
+class BittyEnumsCommand extends Command
 {
-    public $signature = 'laravel-bitwise-enums';
+    public $signature = 'laravel-bitty-enums';
 
     public $description = 'My command';
 

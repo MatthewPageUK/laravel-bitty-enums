@@ -1,12 +1,12 @@
 {
-    "name": "matthewpageuk/laravel-bitwise-enums",
-    "description": "This package helps you use bitwise enums",
+    "name": "matthewpageuk/laravel-bitty-enums",
+    "description": "This package helps you use bitty enums",
     "keywords": [
         "Matthew Page",
         "laravel",
-        "laravel-bitwise-enums"
+        "laravel-bitty-enums"
     ],
-    "homepage": "https://github.com/matthewpageuk/laravel-bitwise-enums",
+    "homepage": "https://github.com/matthewpageuk/laravel-bitty-enums",
     "license": "MIT",
     "authors": [
         {
@@ -30,20 +30,20 @@
     },
     "autoload": {
         "psr-4": {
-            "MatthewPageUK\\BitwiseEnums\\": "src/",
-            "MatthewPageUK\\BitwiseEnums\\Database\\Factories\\": "database/factories/",
+            "MatthewPageUK\\BittyEnums\\": "src/",
+            "MatthewPageUK\\BittyEnums\\Database\\Factories\\": "database/factories/",
             "Tests\\": "tests/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MatthewPageUK\\BitwiseEnums\\Tests\\": "tests/",
+            "MatthewPageUK\\BittyEnums\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
-        "clear": "@php vendor/bin/testbench package:purge-laravel-bitwise-enums --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-laravel-bitty-enums --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": [
             "@composer run prepare",
@@ -69,10 +69,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "MatthewPageUK\\BitwiseEnums\\BitwiseEnumsServiceProvider"
+                "MatthewPageUK\\BittyEnums\\BittyEnumsServiceProvider"
             ],
             "aliases": {
-                "BitwiseEnums": "MatthewPageUK\\BitwiseEnums\\Facades\\BitwiseEnums"
+                "BittyEnums": "MatthewPageUK\\BittyEnums\\Facades\\BittyEnums"
             }
         }
     },

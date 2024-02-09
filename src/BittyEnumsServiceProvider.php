@@ -1,12 +1,12 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums;
+namespace MatthewPageUK\BittyEnums;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use MatthewPageUK\BitwiseEnums\Commands\BitwiseEnumsCommand;
+use MatthewPageUK\BittyEnums\Commands\BittyEnumsCommand;
 
-class BitwiseEnumsServiceProvider extends PackageServiceProvider
+class BittyEnumsServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +16,10 @@ class BitwiseEnumsServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('laravel-bitwise-enums')
+            ->name('laravel-bitty-enums')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_laravel-bitwise-enums_table')
-            ->hasCommand(BitwiseEnumsCommand::class);
+            ->hasMigration('create_laravel-bitty-enums_table')
+            ->hasCommand(BittyEnumsCommand::class);
     }
 }

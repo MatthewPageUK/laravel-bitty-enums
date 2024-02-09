@@ -1,10 +1,10 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Tests\Enums\Bad;
+namespace MatthewPageUK\BittyEnums\Tests\Enums\Bad;
 
-use MatthewPageUK\BitwiseEnums\Contracts\BitwiseEnum;
+use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 
-enum TooManyCases: int implements BitwiseEnum
+enum TooManyCases: int implements BittyEnum
 {
     case Case1   = 1;
     case Case2   = 2;

@@ -1,5 +1,5 @@
 <?php
 
-use MatthewPageUK\BitwiseEnums\Tests\TestCase;
+use MatthewPageUK\BittyEnums\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

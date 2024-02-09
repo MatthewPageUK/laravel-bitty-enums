@@ -1,10 +1,10 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Tests\Enums\Good;
+namespace MatthewPageUK\BittyEnums\Tests\Enums\Good;
 
-use MatthewPageUK\BitwiseEnums\Contracts\BitwiseEnum;
+use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 
-enum Colour: int implements BitwiseEnum
+enum Colour: int implements BittyEnum
 {
     case Red    = 1;
     case Green  = 2;

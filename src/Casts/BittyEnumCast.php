@@ -1,12 +1,12 @@
 <?php
 
-namespace MatthewPageUK\BitwiseEnums\Casts;
+namespace MatthewPageUK\BittyEnums\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use MatthewPageUK\BitwiseEnums\BitwiseEnumContainer;
+use MatthewPageUK\BittyEnums\BittyEnumContainer;
 
-class BitwiseEnumCast implements CastsAttributes
+class BittyEnumCast implements CastsAttributes
 {
     public function __construct(
         protected string $enumClass
@@ -14,12 +14,12 @@ class BitwiseEnumCast implements CastsAttributes
 
     public function get(Model $model, string $key, $value, array $attributes)
     {
-        return new BitwiseEnumContainer($this->enumClass, $value);
+        return new BittyEnumContainer($this->enumClass, $value);
     }
 
     public function set(Model $model, string $key, $value, array $attributes)
     {
-        if ($value instanceof BitwiseEnumContainer) {
+        if ($value instanceof BittyEnumContainer) {
             return $value->getValue();
         }
 
