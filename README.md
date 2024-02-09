@@ -9,6 +9,9 @@ This package helps you use bitty enums in your Laravel application if you choose
 
 ## Installation
 
+WIP DO NOT DO THIS....
+
+
 You can install the package via composer:
 
 ```bash
@@ -40,6 +43,23 @@ return [
 $bittyEnums = new MatthewPageUK\BittyEnums();
 echo $bittyEnums->echoPhrase('Hello, MatthewPageUK!');
 ```
+
+
+### Scoped Queries
+
+```php
+
+Model::whereBittyEnumHas('colours', Colours::Blue)->get();
+
+xxx
+Model::whereBittyEnumHasAny('colours', Colours::Blue)->get();
+
+```
+
+
+
+
+
 
 ## Testing
 
