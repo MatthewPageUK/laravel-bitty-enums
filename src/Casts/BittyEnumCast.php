@@ -10,7 +10,8 @@ class BittyEnumCast implements CastsAttributes
 {
     public function __construct(
         protected string $enumClass
-    ) { }
+    ) {
+    }
 
     public function get(Model $model, string $key, $value, array $attributes)
     {

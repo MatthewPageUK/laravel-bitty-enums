@@ -2,9 +2,9 @@
 
 namespace MatthewPageUK\BittyEnums;
 
+use MatthewPageUK\BittyEnums\Commands\BittyEnumsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use MatthewPageUK\BittyEnums\Commands\BittyEnumsCommand;
 
 class BittyEnumsServiceProvider extends PackageServiceProvider
 {

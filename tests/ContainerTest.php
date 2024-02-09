@@ -4,8 +4,8 @@ use MatthewPageUK\BittyEnums\Support\Container as BittyEnumContainer;
 use MatthewPageUK\BittyEnums\Tests\Enums\Bad\BadValue;
 use MatthewPageUK\BittyEnums\Tests\Enums\Bad\NoInterface;
 use MatthewPageUK\BittyEnums\Tests\Enums\Bad\TooManyCases;
-use MatthewPageUK\BittyEnums\Tests\Enums\Good\Warning;
 use MatthewPageUK\BittyEnums\Tests\Enums\Good\Colour;
+use MatthewPageUK\BittyEnums\Tests\Enums\Good\Warning;
 
 it('can create a new container', function () {
     $container = new BittyEnumContainer(Warning::class);
@@ -93,7 +93,7 @@ it('can clear the values', function () {
 });
 
 it('can set all values', function () {
-    $total = array_reduce(Warning::cases(), fn($carry, $item) => $carry + $item->value, 0);
+    $total = array_reduce(Warning::cases(), fn ($carry, $item) => $carry + $item->value, 0);
     $container = (new BittyEnumContainer(Warning::class))
         ->setAll();
 

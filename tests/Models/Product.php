@@ -9,7 +9,6 @@ use MatthewPageUK\BittyEnums\Traits\WithBittyEnumQueryScope;
 
 /**
  * Test product model with bitty enum cast and query scopes.
- *
  */
 class Product extends Model
 {
@@ -18,6 +17,6 @@ class Product extends Model
     protected $fillable = ['name', 'colours', 'price'];
 
     protected $casts = [
-        'colours' => BittyEnumCast::class . ':' . Colour::class,
+        'colours' => BittyEnumCast::class.':'.Colour::class,
     ];
 }

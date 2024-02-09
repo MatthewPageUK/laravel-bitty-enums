@@ -11,8 +11,8 @@ class Validator implements BittyValidator
         protected string $class
     ) {
         $this->validateClass($this->class)
-             ->validateCases($this->class)
-             ->validateValues($this->class);
+            ->validateCases($this->class)
+            ->validateValues($this->class);
     }
 
     public function validateClass(string $class): self
@@ -36,7 +36,7 @@ class Validator implements BittyValidator
     public function validateValues(string $class): self
     {
         foreach ($class::cases() as $choice) {
-            if ($choice->value & ($choice->value - 1) !== 0 ) {
+            if ($choice->value & ($choice->value - 1) !== 0) {
                 throw new \InvalidArgumentException("Invalid BittyEnum - value not a power of two: {$class} {$choice->name}");
             }
         }

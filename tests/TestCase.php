@@ -5,8 +5,8 @@ namespace MatthewPageUK\BittyEnums\Tests;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Orchestra\Testbench\TestCase as Orchestra;
 use MatthewPageUK\BittyEnums\BittyEnumsServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 use Tests\Models\Product;
 
 class TestCase extends Orchestra

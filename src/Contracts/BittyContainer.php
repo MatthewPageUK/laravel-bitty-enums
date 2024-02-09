@@ -19,5 +19,4 @@ interface BittyContainer
     public function clear(): self;
 
     public function setAll(): self;
-
 }

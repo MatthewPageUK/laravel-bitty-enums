@@ -11,9 +11,6 @@ trait WithBittyEnumQueryScope
     /**
      * Scope a query to only include records with a specific bitty enum value.
      *
-     * @param Builder $query
-     * @param string $column
-     * @param BittyEnum $choice
      * @todo
      */
     public function scopeWhereBittyEnumHas(Builder $query, string $column, BittyEnum $choice): Builder
@@ -28,11 +25,6 @@ trait WithBittyEnumQueryScope
 
     /**
      * Scope the query to only include records that don't have a specific bitty enum value.
-     *
-     * @param Builder $query
-     * @param string $column
-     * @param BittyEnum $choice
-     * @return Builder
      */
     public function scopeWhereBittyEnumDoesntHave(Builder $query, string $column, BittyEnum $choice): Builder
     {
@@ -44,11 +36,6 @@ trait WithBittyEnumQueryScope
     /**
      * Scope the query to only include records that do not have any of the
      * bitty enum values in the provided container.
-     *
-     * @param Builder $query
-     * @param string $column
-     * @param BittyContainer $choices
-     * @return Builder
      */
     public function scopeWhereBittyEnumDoesntHaveAny(Builder $query, string $column, BittyContainer $choices): Builder
     {
@@ -60,10 +47,6 @@ trait WithBittyEnumQueryScope
     /**
      * Scope a query to only include records with any of the
      * bitty enum values in the provided container.
-     *
-     * @param Builder $query
-     * @param string $column
-     * @param BittyContainer $choices
      */
     public function scopeWhereBittyEnumHasAny(Builder $query, string $column, BittyContainer $choices): Builder
     {
@@ -76,9 +59,8 @@ trait WithBittyEnumQueryScope
      * Scope a query to only include records with all of the
      * bitty enum values in the provided container.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $column
-     * @param BittyContainer $choices
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string  $column
      */
     public function scopeWhereBittyEnumHasAll($query, $column, BittyContainer $choices)
     {
