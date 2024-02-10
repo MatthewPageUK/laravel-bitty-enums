@@ -1,8 +1,5 @@
 <?php
 
-// config for MatthewPageUK/BittyEnums
 return [
-    'accepted' => [
-        MyEnum::class,
-    ],
+    'max_bits' => 16,
 ];

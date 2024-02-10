@@ -1,7 +1,7 @@
 <?php
 
-use MatthewPageUK\BittyEnums\Support;
 use MatthewPageUK\BittyEnums\Contracts;
+use MatthewPageUK\BittyEnums\Support;
 use MatthewPageUK\BittyEnums\Tests\Enums\Bad;
 use MatthewPageUK\BittyEnums\Tests\Enums\Good;
 
@@ -126,11 +126,121 @@ it('throws an exception when creating a new container from array of enums with w
 // Register bindings for BittyContainer contract
 it('registers bindings for BittyContainer contract', function () {
     $container = $this->app->makeWith(
-            Contracts\BittyContainer::class,
-            ['class' => Good\Warning::class]
-        )
+        Contracts\BittyContainer::class,
+        ['class' => Good\Warning::class]
+    )
         ->set(Good\Warning::LowFuel);          // 1
 
     expect($container)->toBeInstanceOf(Contracts\BittyContainer::class);
     expect($container->getValue())->toBe(1);
+});
+
+// Set can accepted array of enums
+it('can accept an array of enums for set() ', function () {
+    $container = (new Support\Container(Good\Warning::class))
+        ->set([
+            Good\Warning::LowFuel,              // 1
+            Good\Warning::CheckEngine,          // 2
+            Good\Warning::TyrePressure,         // 4
+        ]);
+
+    expect($container->getValue())->toBe(7);
+});
+
+// Set can accept another BittyContainer
+it('can accept another BittyContainer for set()', function () {
+    $preferences = (new Support\Container(Good\Colour::class))
+        ->set([
+            Good\Colour::Red,       // 1
+            Good\Colour::Green,     // 2
+            Good\Colour::Blue,      // 4
+        ]);
+
+    $container = (new Support\Container(Good\Colour::class))
+        ->set($preferences);
+
+    expect($container->getValue())->toBe(7);
+});
+
+// Unset can accepted array of enums
+it('can accept an array of enums for unset()', function () {
+    $container = (new Support\Container(Good\Warning::class))
+        ->set([
+            Good\Warning::LowFuel,              // 1
+            Good\Warning::CheckEngine,          // 2
+            Good\Warning::TyrePressure,         // 4
+        ])
+        ->unset([
+            Good\Warning::LowFuel,              // 1
+            Good\Warning::CheckEngine,          // 2
+        ]);
+
+    expect($container->getValue())->toBe(4);
+});
+
+// Unset can accept another BittyContainer
+it('can accept another BittyContainer for unset()', function () {
+    $dislikes = (new Support\Container(Good\Colour::class))
+        ->set([
+            Good\Colour::Red,       // 1
+            Good\Colour::Green,     // 2
+        ]);
+
+    $container = (new Support\Container(Good\Colour::class))
+        ->set([
+            Good\Colour::Red,       // 1
+            Good\Colour::Green,     // 2
+            Good\Colour::Blue,      // 4
+        ])
+        ->unset($dislikes);
+
+    expect($container->getValue())->toBe(4);
+});
+
+// HasAny
+it('can check if any of the values are set from hasAny()', function () {
+    $empty = (new Support\Container(Good\Warning::class));
+
+    $emergencies = (new Support\Container(Good\Warning::class))
+        ->set(Good\Warning::Brakes)           // 8
+        ->set(Good\Warning::TyrePressure);    // 4
+
+    $notifications = (new Support\Container(Good\Warning::class))
+        ->set(Good\Warning::LowFuel)          // 1
+        ->set(Good\Warning::CheckEngine);     // 2
+
+    $container = (new Support\Container(Good\Warning::class))
+        ->set(Good\Warning::LowFuel)          // 1
+        ->set(Good\Warning::CheckEngine);     // 2
+
+    expect($container->hasAny([Good\Warning::LowFuel, Good\Warning::CheckEngine]))->toBeTrue();
+    expect($container->hasAny([Good\Warning::CheckEngine, Good\Warning::TyrePressure]))->toBeTrue();
+    expect($container->hasAny($emergencies))->toBeFalse();
+    expect($container->hasAny($notifications))->toBeTrue();
+    expect($container->hasAny([]))->toBeFalse();
+    expect($container->hasAny($empty))->toBeFalse();
+});
+
+// HasAll
+it('can check if all of the values are set from hasAll()', function () {
+    $empty = (new Support\Container(Good\Warning::class));
+
+    $emergencies = (new Support\Container(Good\Warning::class))
+        ->set(Good\Warning::Brakes)           // 8
+        ->set(Good\Warning::TyrePressure);    // 4
+
+    $notifications = (new Support\Container(Good\Warning::class))
+        ->set(Good\Warning::LowFuel)          // 1
+        ->set(Good\Warning::CheckEngine);     // 2
+
+    $container = (new Support\Container(Good\Warning::class))
+        ->set(Good\Warning::LowFuel)          // 1
+        ->set(Good\Warning::CheckEngine);     // 2
+
+    expect($container->hasAll([Good\Warning::LowFuel, Good\Warning::CheckEngine]))->toBeTrue();
+    expect($container->hasAll([Good\Warning::CheckEngine, Good\Warning::TyrePressure]))->toBeFalse();
+    expect($container->hasAll($emergencies))->toBeFalse();
+    expect($container->hasAll($notifications))->toBeTrue();
+    expect($container->hasAll([]))->toBeFalse();
+    expect($container->hasAll($empty))->toBeFalse();
 });

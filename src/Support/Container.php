@@ -17,27 +17,11 @@ class Container implements BittyContainer
         $this->validator = new Validator($this->class);
     }
 
-    public function set(BittyEnum $choice): BittyContainer
+    public function clear(): BittyContainer
     {
-        $this->validator->validateChoice($choice);
-        $this->selected |= $choice->value;
+        $this->selected = 0;
 
         return $this;
-    }
-
-    public function unset(BittyEnum $choice): BittyContainer
-    {
-        $this->validator->validateChoice($choice);
-        $this->selected &= ~$choice->value;
-
-        return $this;
-    }
-
-    public function has(BittyEnum $choice): bool
-    {
-        $this->validator->validateChoice($choice);
-
-        return $this->selected & $choice->value;
     }
 
     public function getChoices(): array
@@ -52,9 +36,67 @@ class Container implements BittyContainer
         return $this->selected;
     }
 
-    public function clear(): BittyContainer
+    public function has(BittyEnum $choice): bool
     {
-        $this->selected = 0;
+        $this->validator->validateChoice($choice);
+
+        return $this->selected & $choice->value;
+    }
+
+    public function hasAny(array|BittyContainer $choices): bool
+    {
+        if ($choices instanceof BittyContainer) {
+            $choices = $choices->getChoices();
+        }
+
+        foreach ($choices as $choice) {
+            if ($this->has($choice)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasAll(array|BittyContainer $choices): bool
+    {
+        if ($choices instanceof BittyContainer) {
+            $choices = $choices->getChoices();
+        }
+
+        if (count($choices) === 0) {
+            return false;
+        }
+
+        foreach ($choices as $choice) {
+            if (! $this->has($choice)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function set(array|BittyContainer|BittyEnum $choice): BittyContainer
+    {
+        if ($choice instanceof BittyContainer) {
+            foreach ($choice->getChoices() as $item) {
+                $this->set($item);
+            }
+
+            return $this;
+        }
+
+        if (is_array($choice)) {
+            foreach ($choice as $item) {
+                $this->set($item);
+            }
+
+            return $this;
+        }
+
+        $this->validator->validateChoice($choice);
+        $this->selected |= $choice->value;
 
         return $this;
     }
@@ -67,6 +109,30 @@ class Container implements BittyContainer
             fn ($carry, $item) => $carry + $item->value,
             0
         );
+
+        return $this;
+    }
+
+    public function unset(array|BittyContainer|BittyEnum $choice): BittyContainer
+    {
+        if ($choice instanceof BittyContainer) {
+            foreach ($choice->getChoices() as $item) {
+                $this->unset($item);
+            }
+
+            return $this;
+        }
+
+        if (is_array($choice)) {
+            foreach ($choice as $item) {
+                $this->unset($item);
+            }
+
+            return $this;
+        }
+
+        $this->validator->validateChoice($choice);
+        $this->selected &= ~$choice->value;
 
         return $this;
     }

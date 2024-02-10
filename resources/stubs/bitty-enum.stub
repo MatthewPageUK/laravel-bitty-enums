@@ -1,0 +1,10 @@
+<?php
+
+namespace {{ namespace }};
+
+use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
+
+enum {{ class }}: int implements BittyEnum
+{
+{{ cases }}
+}

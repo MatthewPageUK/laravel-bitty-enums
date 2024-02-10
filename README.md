@@ -21,18 +21,6 @@ You can install the package via composer:
 composer require matthewpageuk/laravel-bitty-enums
 ```
 
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-bitty-enums-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
 
 ## Usage
 
@@ -43,13 +31,23 @@ return [
 
 ## Create an Enum
 
-To use an `enum` with this package you must implement the `MatthewPageUK\BittyEnums\Contracts\BittyEnum` interface.
+You can create a new `enum` using the `bitty-enum:make` Artisan command. This command will create a new enum class in the `app/Enums` directory with the cases you supply. It will ensure the values and names are suitable for use with the package.
 
-Return type must be `int` and the values must be a power of 2 starting from 1.
+```bash
+php artisan bitty-enum:make Colours
+```
 
-Invalid values will throw an `InvalidEnumValueException`.
+To use your own `enums` with this package they must :
 
-There is a current limit of 16 cases (bits) per enum. @todo can this be 32 bits?
+- Implement the `MatthewPageUK\BittyEnums\Contracts\BittyEnum` interface.
+- Return type must be `int`
+- Values must be a power of 2 starting from 1 in order
+
+Invalid enums will throw an `InvalidEnumValueException`
+
+***There is a current limit of 16 cases (bits) per enum. This can be overiding in your config files.***
+
+Example of a `Colour` enum:
 
 ```php
 use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
@@ -67,58 +65,80 @@ enum Colour: int implements BittyEnum
 
 ## Using the Bitty Enum Container
 
-You can create a new container using the Contract.
+The container is used to store the selected enum values. It is a wrapper around the integer value and provides methods to manage and check the values. It also performs validation on the values you set to prevent accidental misuse.
+
+### Creating a container
+
+You can create a new container using the Contract binding in the Laravel app.
 
 ```php
 use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
 
 $container = app()->makeWith(BittyContainer::class, ['class' => Colour::class]);
-
 ```
 
-You can use the `MatthewPageUK\BittyEnums\Support\Container` to manage the enum values, perform checks and manage the values.
+This will create a container suitable for the `Colour` enum.
+
+You can also use the `MatthewPageUK\BittyEnums\Support\Container` directly.
 
 ```php
+use MatthewPageUK\BittyEnums\Support\Container as BittyContainer;
 
-use MatthewPageUK\BittyEnums\Support\Container as BittyEnumContainer;
-
-$favouriteColours = (new BittyEnumContainer(Colour::class))
+$favouriteColours = (new BittyContainer(Colour::class))
     ->set(Colour::Red)
     ->set(Colour::Green)
     ->set(Colour::Blue);
+```
 
+### Example usage
+
+```php
 // Check if the container has a value
 if ($favouriteColours->has(Colour::Red)) {
     echo 'Red is one of your favourite colours';
 }
 
-// You can also create a container from an array of enums
-$customerPreferences =
-    BittyEnumContainer::fromArrayOfEnums(Colour::class, [
-        Colour::Red,
-        Colour::Green,
-        Colour::Blue
-    ]);
+// Check if the container has any of the values
+if ($favouriteColours->hasAny([Colour::Red, Colour::Green])) {
+    echo 'You like red or green';
+}
 
-$hotList = Products::whereBittyEnumHasAny('colours', $customerPreferences)->get();
+// Check if the container has all of the values
+if ($favouriteColours->hasAll([Colour::Red, Colour::Green])) {
+    echo 'You like red and green';
+}
 
-// Methods
-public function set(BittyEnum $choice): BittyContainer;
+// Pass another container to check if any of the values exist
+if ($product->colours->hasAny($favouriteColours)) {
+    echo 'This product is available in one of your favourite colours';
+}
+```
 
-public function unset(BittyEnum $choice): BittyContainer;
+### Public container methods
 
-public function has(BittyEnum $choice): bool;
+```php
+public function __construct(string $class, int $selected = 0);
+
+public function clear(): BittyContainer;
 
 public function getChoices(): array;
 
 public function getValue(): int;
 
-public function clear(): BittyContainer;
+public function has(BittyEnum $choice): bool;
+
+public function hasAll(array|BittyContainer $choices): bool;
+
+public function hasAny(array|BittyContainer $choices): bool;
+
+public function set(array|BittyContainer|BittyEnum $choice): BittyContainer;
 
 public function setAll(): BittyContainer;
 
-public static function fromArrayOfEnums(string $class, array $choices): BittyContainer;
+public function unset(array|BittyContainer|BittyEnum $choice): BittyContainer;
 ```
+
+### Validation
 
 The container also perfoms validation on the values you set, throwing a `InvalidArgumentException` if you try to set an invalid value or have a malformed enum.
 
@@ -128,9 +148,21 @@ You can cast the `integer` column on your models to a `BittyEnumContainer` using
 
 You must pass the enum class you intend to use as the second parameter.
 
-Your database column should be a `BIGINT`. @todo see also bit limit on enum?
+Your database column should be a `BIGINT`.
+
+@todo see also bit limit on enum, how many can we have?
+
+### Example Laravel Model
 
 ```php
+Schema::create('products', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->unsignedBigInteger('colours');
+    $table->unsignedInteger('price');
+    $table->timestamps();
+});
+
 use App\Enums\Colours;
 use MatthewPageUK\BittyEnums\Casts\BittyEnumCast;
 
@@ -141,10 +173,9 @@ class Product extends Model
     ];
 }
 ```
-You can now use the container methods to update and retrieve the enum values.
+You can now use the container methods to update and retrieve the enum values direct from your model attribute.
 
 ```php
-// Set and update value
 $product = Product::find(1);
 $product->colours->set(Colours::Blue)->unset(Colours::Red);
 $product->save();
@@ -160,9 +191,7 @@ if ($product->colours->has(Colours::Blue)) {
 
 ```php
 // Check if any of the values exist
-use MatthewPageUK\BittyEnums\Support\Container as BittyEnumContainer;
-
-$customerPreferences = new BittyEnumContainer(Colours::class)
+$customerPreferences = app()->makeWith(BittyContainer::class, ['class' => Colour::class])
     ->set(Colours::Blue)
     ->set(Colours::Red)
     ->set(Colours::Green);
@@ -216,8 +245,15 @@ Product::whereBittyEnumDoesntHaveAny('colours', $customerPreferences)->get();
 
 
 
+## Config settings
 
+You can set the maximum number of bits for the container in the config file.
 
+```php
+return [
+    'max_bits' => 16,
+];
+```
 
 ## Package Testing
 

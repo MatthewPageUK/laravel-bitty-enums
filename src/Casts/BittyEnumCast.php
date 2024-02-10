@@ -4,7 +4,7 @@ namespace MatthewPageUK\BittyEnums\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use MatthewPageUK\BittyEnums\Support\Container as BittyEnumContainer;
+use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
 
 class BittyEnumCast implements CastsAttributes
 {
@@ -15,12 +15,15 @@ class BittyEnumCast implements CastsAttributes
 
     public function get(Model $model, string $key, $value, array $attributes)
     {
-        return new BittyEnumContainer($this->enumClass, $value);
+        return app()->makeWith(BittyContainer::class, [
+            'class' => $this->enumClass,
+            'selected' => $value,
+        ]);
     }
 
     public function set(Model $model, string $key, $value, array $attributes)
     {
-        if ($value instanceof BittyEnumContainer) {
+        if ($value instanceof BittyContainer) {
             return $value->getValue();
         }
 

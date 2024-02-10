@@ -30,7 +30,7 @@ class Validator implements BittyValidator
             throw new \InvalidArgumentException("Invalid BittyEnum - no cases defined: {$class}");
         }
 
-        if (count($class::cases()) > 16) {
+        if (count($class::cases()) > config('bitty-enums.max_bits')) {
             throw new \InvalidArgumentException("Invalid BittyEnum - too many values, max 16 bits: {$class}");
         }
 

@@ -3,30 +3,27 @@
 namespace MatthewPageUK\BittyEnums;
 
 use Illuminate\Support\ServiceProvider;
-use MatthewPageUK\BittyEnums\Commands\BittyEnumsCommand;
-use MatthewPageUK\BittyEnums\Contracts;
-use MatthewPageUK\BittyEnums\Support;
+use MatthewPageUK\BittyEnums\Commands\MakeBittyEnum;
 
 class BittyEnumsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__.'/../config/bitty-enums.php', 'bitty-enums');
+
         $this->app->bind(Contracts\BittyContainer::class, Support\Container::class);
     }
 
+    public function boot(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                MakeBittyEnum::class,
+            ]);
+        }
 
-    // public function configurePackage(Package $package): void
-    // {
-    //     /*
-    //      * This class is a Package Service Provider
-    //      *
-    //      * More info: https://github.com/spatie/laravel-package-tools
-    //      */
-    //     $package
-    //         ->name('laravel-bitty-enums')
-    //         ->hasConfigFile()
-    //         ->hasViews()
-    //         ->hasMigration('create_laravel-bitty-enums_table')
-    //         ->hasCommand(BittyEnumsCommand::class);
-    // }
+        $this->publishes([
+            __DIR__.'/../config/bitty-enums.php' => config_path('bitty-enums.php'),
+        ], 'bitty-enums-config');
+    }
 }
