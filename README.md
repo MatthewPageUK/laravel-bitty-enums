@@ -6,7 +6,9 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/matthewpageuk/laravel-bitty-enums.svg?style=flat-square)](https://packagist.org/packages/matthewpageuk/laravel-bitty-enums)
 [![GitHub Issues](https://img.shields.io/github/issues/matthewpageuk/laravel-bitty-enums)](https://github.com/matthewpageuk/laravel-bitty-enums/issues)
 
-This package helps you use bitty enums in your Laravel application if you choose to, think before you do... It provides an Enum Container, a Trait for your model queries and a Model Cast.
+This package helps you use bitwise enums in your Laravel application if you choose to, think before you do... It provides an Enum Container, a trait for your model query scopes and a model attribute cast.
+
+You can think of this as a hasMany relationship but using a single integer column to store the data.
 
 ## Installation
 
@@ -65,13 +67,22 @@ enum Colour: int implements BittyEnum
 
 ## Using the Bitty Enum Container
 
+You can create a new container using the Contract.
+
+```php
+use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
+
+$container = app()->makeWith(BittyContainer::class, ['class' => Colour::class]);
+
+```
+
 You can use the `MatthewPageUK\BittyEnums\Support\Container` to manage the enum values, perform checks and manage the values.
 
 ```php
 
 use MatthewPageUK\BittyEnums\Support\Container as BittyEnumContainer;
 
-$favouriteColours = new BittyEnumContainer(Colour::class)
+$favouriteColours = (new BittyEnumContainer(Colour::class))
     ->set(Colour::Red)
     ->set(Colour::Green)
     ->set(Colour::Blue);
@@ -81,10 +92,20 @@ if ($favouriteColours->has(Colour::Red)) {
     echo 'Red is one of your favourite colours';
 }
 
-// Methods
-public function set(BittyEnum $choice): self;
+// You can also create a container from an array of enums
+$customerPreferences =
+    BittyEnumContainer::fromArrayOfEnums(Colour::class, [
+        Colour::Red,
+        Colour::Green,
+        Colour::Blue
+    ]);
 
-public function unset(BittyEnum $choice): self;
+$hotList = Products::whereBittyEnumHasAny('colours', $customerPreferences)->get();
+
+// Methods
+public function set(BittyEnum $choice): BittyContainer;
+
+public function unset(BittyEnum $choice): BittyContainer;
 
 public function has(BittyEnum $choice): bool;
 
@@ -92,9 +113,11 @@ public function getChoices(): array;
 
 public function getValue(): int;
 
-public function clear(): self;
+public function clear(): BittyContainer;
 
-public function setAll(): self;
+public function setAll(): BittyContainer;
+
+public static function fromArrayOfEnums(string $class, array $choices): BittyContainer;
 ```
 
 The container also perfoms validation on the values you set, throwing a `InvalidArgumentException` if you try to set an invalid value or have a malformed enum.

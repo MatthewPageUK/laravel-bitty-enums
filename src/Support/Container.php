@@ -17,7 +17,7 @@ class Container implements BittyContainer
         $this->validator = new Validator($this->class);
     }
 
-    public function set(BittyEnum $choice): self
+    public function set(BittyEnum $choice): BittyContainer
     {
         $this->validator->validateChoice($choice);
         $this->selected |= $choice->value;
@@ -25,7 +25,7 @@ class Container implements BittyContainer
         return $this;
     }
 
-    public function unset(BittyEnum $choice): self
+    public function unset(BittyEnum $choice): BittyContainer
     {
         $this->validator->validateChoice($choice);
         $this->selected &= ~$choice->value;
@@ -52,14 +52,14 @@ class Container implements BittyContainer
         return $this->selected;
     }
 
-    public function clear(): self
+    public function clear(): BittyContainer
     {
         $this->selected = 0;
 
         return $this;
     }
 
-    public function setAll(): self
+    public function setAll(): BittyContainer
     {
         // tidy this up, there's a neater way I suspect
         $this->selected = array_reduce(
@@ -69,5 +69,16 @@ class Container implements BittyContainer
         );
 
         return $this;
+    }
+
+    public static function fromArrayOfEnums(string $class, array $choices): BittyContainer
+    {
+        $container = new self($class);
+
+        foreach ($choices as $choice) {
+            $container->set($choice);
+        }
+
+        return $container;
     }
 }
