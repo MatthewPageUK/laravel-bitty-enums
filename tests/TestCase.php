@@ -11,12 +11,10 @@ use Tests\Models\Product;
 
 class TestCase extends Orchestra
 {
-    // https://github.com/staudenmeir/eloquent-has-many-deep/blob/master/tests/TestCase.php
     protected string $database;
 
     protected function setUp(): void
     {
-        // https://github.com/staudenmeir/eloquent-has-many-deep/blob/master/tests/TestCase.php
         $this->database = getenv('DB_CONNECTION') ?: 'sqlite';
 
         parent::setUp();
@@ -24,9 +22,6 @@ class TestCase extends Orchestra
         $this->migrateDatabase();
         $this->seedDatabase();
 
-        // Factory::guessFactoryNamesUsing(
-        //     fn (string $modelName) => 'MatthewPageUK\\BittyEnums\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        // );
     }
 
     protected function migrateDatabase(): void
@@ -62,10 +57,5 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
-
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_laravel-bitty-enums_table.php.stub';
-        $migration->up();
-        */
     }
 }
