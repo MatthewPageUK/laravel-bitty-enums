@@ -191,6 +191,8 @@ class Product extends Model
 ```
 You can now use the container methods to update and retrieve the enum values direct from your model attribute.
 
+### Example Usage
+
 ```php
 $product = Product::find(1);
 $product->colours->set(Colours::Blue)->unset(Colours::Red);
@@ -207,7 +209,8 @@ if ($product->colours->has(Colours::Blue)) {
 
 ```php
 // Check if any of the values exist
-$customerPreferences = app()->makeWith(BittyContainer::class, ['class' => Colour::class])
+$customerPreferences = app()->make(BittyContainer::class)
+    ->setClass(Colour::class)
     ->set(Colours::Blue)
     ->set(Colours::Red)
     ->set(Colours::Green);

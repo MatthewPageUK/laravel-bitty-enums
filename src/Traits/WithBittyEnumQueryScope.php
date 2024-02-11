@@ -9,11 +9,6 @@ use MatthewPageUK\BittyEnums\Contracts\BittyValidator;
 
 trait WithBittyEnumQueryScope
 {
-    protected function getBittyValidator(): BittyValidator
-    {
-        return app()->make(BittyValidator::class);
-    }
-
     /**
      * Scope a query to only include records with a specific bitty enum value.
      *
@@ -105,5 +100,13 @@ trait WithBittyEnumQueryScope
         }
 
         return $choices;
+    }
+
+    /**
+     * Get the bitty validator instance.
+     */
+    protected function getBittyValidator(): BittyValidator
+    {
+        return app()->make(BittyValidator::class);
     }
 }
