@@ -46,21 +46,3 @@ it('throws an exception if the container enum class is invalid', function () {
         ->setClass(Bad\BadValue::class);
 
 })->throws(BittyEnumException::class);
-
-// WIP - static method
-// ---
-// it('can create a new container from array of enums', function () {
-//     $container = Support\Container::fromArrayOfEnums(Good\Warning::class, [
-//         Good\Warning::LowFuel,              // 1
-//         Good\Warning::CheckEngine,          // 2
-//         Good\Warning::TyrePressure,         // 4
-//     ]);
-//     expect($container->getValue())->toBe(7);
-// });
-
-// it('throws an exception when creating a new container from array of enums with wrong class', function () {
-//     Support\Container::fromArrayOfEnums(Good\Warning::class, [
-//         Good\Warning::LowFuel,              // 1
-//         Good\Colour::Red,                   // 1 - wrong class
-//     ]);
-// })->throws(\InvalidArgumentException::class);
