@@ -10,6 +10,8 @@ This package helps you use bitwise enums in your Laravel application if you choo
 
 You can think of this as a hasMany relationship but using a single integer column to store the data.
 
+![bitty1](https://github.com/MatthewPageUK/laravel-bitty-enums/assets/46349796/faed58e5-8f08-456c-a24e-9a7f17870f15)
+
 ## Installation
 
 You can install the package into your Laravel project via composer:
