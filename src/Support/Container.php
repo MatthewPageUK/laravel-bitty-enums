@@ -173,7 +173,6 @@ class Container implements BittyContainer, Iterator
         return $this;
     }
 
-
     /**
      * Set the validator instance for the container
      * and validate the provided class
