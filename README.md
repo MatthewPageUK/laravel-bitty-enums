@@ -4,7 +4,7 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/matthewpageuk/laravel-bitty-enums/run-tests.yml?branch=main&label=tests&style=for-the-badge)](https://github.com/matthewpageuk/laravel-bitty-enums/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/matthewpageuk/laravel-bitty-enums/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=for-the-badge)](https://github.com/matthewpageuk/laravel-bitty-enums/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/matthewpageuk/laravel-bitty-enums.svg?style=for-the-badge)](https://packagist.org/packages/matthewpageuk/laravel-bitty-enums)
-[![GitHub Issues](https://img.shields.io/github/issues/matthewpageuk/laravel-bitty-enums)](https://github.com/matthewpageuk/laravel-bitty-enums/issues)
+[![GitHub Issues](https://img.shields.io/github/issues/matthewpageuk/laravel-bitty-enums.svg?style=for-the-badge)](https://github.com/matthewpageuk/laravel-bitty-enums/issues)
 
 This package helps you use bitwise enums in your Laravel application if you choose to, think before you do. It provides an Enum Container, a trait for your model query scopes and a model attribute cast.
 
