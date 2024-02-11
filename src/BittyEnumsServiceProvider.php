@@ -12,6 +12,7 @@ class BittyEnumsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/bitty-enums.php', 'bitty-enums');
 
         $this->app->bind(Contracts\BittyContainer::class, Support\Container::class);
+        $this->app->bind(Contracts\BittyValidator::class, Support\Validator::class);
     }
 
     public function boot(): void
@@ -22,8 +23,8 @@ class BittyEnumsServiceProvider extends ServiceProvider
             ]);
         }
 
-        $this->publishes([
-            __DIR__.'/../config/bitty-enums.php' => config_path('bitty-enums.php'),
-        ], 'bitty-enums-config');
+        // $this->publishes([
+        //     __DIR__.'/../config/bitty-enums.php' => config_path('bitty-enums.php'),
+        // ], 'bitty-enums-config');
     }
 }

@@ -7,6 +7,8 @@ namespace MatthewPageUK\BittyEnums\Contracts;
  */
 interface BittyContainer
 {
+    public function getValidator(): BittyValidator;
+
     /**
      * Create a new container to hold the provided enum class
      * and default to the selected integer value.
@@ -53,6 +55,8 @@ interface BittyContainer
      */
     public function setAll(): BittyContainer;
 
+    public function setClass(string $class): BittyContainer;
+
     /**
      * Unset the provided case in the container
      */
@@ -63,7 +67,7 @@ interface BittyContainer
      *
      * @todo ????
      *
-     * @throws \InvalidArgumentException
+     * @throws BittyEnumException
      */
     public static function fromArrayOfEnums(string $class, array $choices): BittyContainer;
 }

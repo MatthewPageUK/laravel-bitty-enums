@@ -93,6 +93,20 @@ $favouriteColours = (new BittyContainer(Colour::class))
 ### Example usage
 
 ```php
+
+// Set values
+$favouriteColours = app()->makeWith(BittyContainer::class, ['class' => Colour::class])
+    ->set(Colour::Red)
+    ->set(Colour::Green)
+    ->set(Colour::Blue);
+
+// Passing an array of values
+$favouriteColours = app()->makeWith(BittyContainer::class, ['class' => Colour::class])
+    ->set([Colour::Red, Colour::Green, Colour::Blue]);
+
+// Unset a value
+$favouriteColours->unset(Colour::Red);
+
 // Check if the container has a value
 if ($favouriteColours->has(Colour::Red)) {
     echo 'Red is one of your favourite colours';
@@ -114,7 +128,7 @@ if ($product->colours->hasAny($favouriteColours)) {
 }
 ```
 
-### Public container methods
+### Container public methods
 
 ```php
 public function __construct(string $class, int $selected = 0);
@@ -140,7 +154,7 @@ public function unset(array|BittyContainer|BittyEnum $choice): BittyContainer;
 
 ### Validation
 
-The container also perfoms validation on the values you set, throwing a `InvalidArgumentException` if you try to set an invalid value or have a malformed enum.
+The container also perfoms validation on the values you set, throwing a `BittyEnumException` if you try to set an invalid value or have a malformed enum.
 
 ## Model Attribute Cast
 

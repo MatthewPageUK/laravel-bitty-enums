@@ -5,9 +5,15 @@ namespace MatthewPageUK\BittyEnums\Traits;
 use Illuminate\Database\Eloquent\Builder;
 use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
 use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
+use MatthewPageUK\BittyEnums\Contracts\BittyValidator;
 
 trait WithBittyEnumQueryScope
 {
+    protected function getBittyValidator(): BittyValidator
+    {
+        return app()->make(BittyValidator::class);
+    }
+
     /**
      * Scope a query to only include records with a specific bitty enum value.
      *
@@ -15,6 +21,8 @@ trait WithBittyEnumQueryScope
      */
     public function scopeWhereBittyEnumHas(Builder $query, string $column, BittyEnum $choice): Builder
     {
+        $this->getBittyValidator()->validateQuery($query, $column, $choice);
+
         return $query->whereRaw(
             sprintf('(%s & %d) = %d', $column, (int) $choice->value, (int) $choice->value)
         );

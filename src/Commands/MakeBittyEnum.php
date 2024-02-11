@@ -3,6 +3,8 @@
 namespace MatthewPageUK\BittyEnums\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Facades\Validator;
+use MatthewPageUK\BittyEnums\Rules;
 
 /**
  * Create a BittyEnum class along with the cases
@@ -54,6 +56,7 @@ class MakeBittyEnum extends GeneratorCommand
 
         // Enum cases from the user input
         $this->cases = $this->prepareCases($this->getCasesFromUser());
+        // End of changes
 
         $this->makeDirectory($path);
 
@@ -128,12 +131,15 @@ class MakeBittyEnum extends GeneratorCommand
 
     /**
      * Validate the case name
-     *
-     * https://www.php.net/manual/en/language.constants.php
      */
     protected function validateCaseName(string $name): bool
     {
-        return preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $name);
+        $validator = Validator::make(
+            ['name' => $name],
+            ['name' => new Rules\CaseName],
+        );
+
+        return $validator->passes();
     }
 
     /**

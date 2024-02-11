@@ -2,23 +2,39 @@
 
 namespace MatthewPageUK\BittyEnums\Support;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Validator as CoreValidator;
 use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 use MatthewPageUK\BittyEnums\Contracts\BittyValidator;
+use MatthewPageUK\BittyEnums\Exceptions\InvalidCaseException;
+use MatthewPageUK\BittyEnums\Exceptions\InvalidClassException;
+use MatthewPageUK\BittyEnums\Exceptions\InvalidQueryException;
+use MatthewPageUK\BittyEnums\Exceptions\InvalidValueException;
+use MatthewPageUK\BittyEnums\Rules;
 
 class Validator implements BittyValidator
 {
     public function __construct(
-        protected string $class
+        protected ?string $class = null
     ) {
-        $this->validateClass($this->class)
-            ->validateCases($this->class)
-            ->validateValues($this->class);
+        if ($class) {
+            $this->validateClass($class)
+                ->validateCases($class)
+                ->validateValues($class);
+        }
     }
+
+    // set class
 
     public function validateClass(string $class): BittyValidator
     {
-        if (! is_a($class, BittyEnum::class, true)) {
-            throw new \InvalidArgumentException("Invalid BittyEnum - not a BittyEnum Interface: {$class}");
+        $validator = CoreValidator::make(
+            ['class' => $class],
+            ['class' => new Rules\ClassType],
+        );
+
+        if ($validator->fails()) {
+            throw new InvalidClassException($validator->getMessageBag()->first());
         }
 
         return $this;
@@ -26,12 +42,15 @@ class Validator implements BittyValidator
 
     public function validateCases(string $class): BittyValidator
     {
-        if ($class::cases() === [] || $class::cases() === null) {
-            throw new \InvalidArgumentException("Invalid BittyEnum - no cases defined: {$class}");
-        }
+        $validator = CoreValidator::make(
+            ['class' => $class],
+            ['class' => [
+                new Rules\NoCases,
+                new Rules\MaxCases,
+            ]]);
 
-        if (count($class::cases()) > config('bitty-enums.max_bits')) {
-            throw new \InvalidArgumentException("Invalid BittyEnum - too many values, max 16 bits: {$class}");
+        if ($validator->fails()) {
+            throw new InvalidCaseException($validator->getMessageBag()->first());
         }
 
         return $this;
@@ -39,21 +58,16 @@ class Validator implements BittyValidator
 
     public function validateValues(string $class): BittyValidator
     {
-        if ($class::cases()[0]->value !== 1) {
-            throw new \InvalidArgumentException("Invalid BittyEnum - first value must be 1: {$class}");
-        }
+        $validator = CoreValidator::make(
+            ['class' => $class],
+            ['class' => [
+                new Rules\PowerOfTwo,
+                new Rules\InOrder,
+                new Rules\StartAtOne,
+            ]]);
 
-        $value = 1;
-        foreach ($class::cases() as $choice) {
-            if ($choice->value & ($choice->value - 1) !== 0) {
-                throw new \InvalidArgumentException("Invalid BittyEnum - value not a power of two: {$class} {$choice->name}");
-            }
-
-            if ($choice->value !== $value) {
-                throw new \InvalidArgumentException("Invalid BittyEnum - values must be in order: {$class} {$choice->name}");
-            }
-
-            $value *= 2;
+        if ($validator->fails()) {
+            throw new InvalidValueException($validator->getMessageBag()->first());
         }
 
         return $this;
@@ -61,10 +75,35 @@ class Validator implements BittyValidator
 
     public function validateChoice(BittyEnum $choice, ?string $class = null): BittyValidator
     {
-        $class = $class ?? $this->class;
+        $validator = CoreValidator::make(
+            ['choice' => $choice],
+            ['choice' => new Rules\MatchClass($class ?? $this->class)]
+        );
 
-        if (! is_a($choice, $class)) {
-            throw new \InvalidArgumentException("Invalid BittyEnum class - expected {$this->class}");
+        if ($validator->fails()) {
+            throw new InvalidClassException($validator->getMessageBag()->first());
+        }
+
+        return $this;
+    }
+
+    public function validateQuery(Builder $query, string $column, BittyEnum $choice): BittyValidator
+    {
+        $validator = CoreValidator::make(
+            [
+                'query' => $query,
+                'choice' => $choice,
+            ], [
+                'query' => [
+                    new Rules\ModelHasColumn($column),
+                    new Rules\ColumnHasCast($column),
+                ],
+                'choice' => new Rules\MatchCastClass($query, $column),
+            ]
+        );
+
+        if ($validator->fails()) {
+            throw new InvalidQueryException($validator->getMessageBag()->first());
         }
 
         return $this;

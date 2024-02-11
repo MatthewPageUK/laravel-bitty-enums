@@ -5,16 +5,34 @@ namespace MatthewPageUK\BittyEnums\Support;
 use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
 use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 use MatthewPageUK\BittyEnums\Contracts\BittyValidator;
+use MatthewPageUK\BittyEnums\Exceptions\InvalidClassException;
 
 class Container implements BittyContainer
 {
     protected BittyValidator $validator;
 
     public function __construct(
-        protected string $class,
+        protected ?string $class = null,
         protected int $selected = 0
     ) {
-        $this->validator = new Validator($this->class);
+        if ($this->class !== null) {
+            $this->setClass($class);
+        }
+    }
+
+    protected function setValidator(string $class): BittyContainer
+    {
+        $this->validator = app()->makeWith(BittyValidator::class, ['class' => $class]);
+
+        return $this;
+    }
+
+    public function setClass(string $class): BittyContainer
+    {
+        $this->setValidator($class);
+        $this->class = $class;
+
+        return $this;
     }
 
     public function clear(): BittyContainer
@@ -26,6 +44,8 @@ class Container implements BittyContainer
 
     public function getChoices(): array
     {
+        $this->requiresClass();
+
         return array_filter($this->class::cases(), function ($choice) {
             return $this->has($choice);
         });
@@ -36,15 +56,24 @@ class Container implements BittyContainer
         return $this->selected;
     }
 
+    public function getValidator(): BittyValidator
+    {
+        return $this->validator;
+    }
+
     public function has(BittyEnum $choice): bool
     {
-        $this->validator->validateChoice($choice);
+        $this->requiresClass()
+            ->getValidator()
+            ->validateChoice($choice);
 
         return $this->selected & $choice->value;
     }
 
     public function hasAny(array|BittyContainer $choices): bool
     {
+        $this->requiresClass();
+
         if ($choices instanceof BittyContainer) {
             $choices = $choices->getChoices();
         }
@@ -60,6 +89,8 @@ class Container implements BittyContainer
 
     public function hasAll(array|BittyContainer $choices): bool
     {
+        $this->requiresClass();
+
         if ($choices instanceof BittyContainer) {
             $choices = $choices->getChoices();
         }
@@ -77,8 +108,19 @@ class Container implements BittyContainer
         return true;
     }
 
+    protected function requiresClass(): BittyContainer
+    {
+        if ($this->class === null) {
+            throw new InvalidClassException('Invalid BittyEnum - container has no class, can not update values');
+        }
+
+        return $this;
+    }
+
     public function set(array|BittyContainer|BittyEnum $choice): BittyContainer
     {
+        $this->requiresClass();
+
         if ($choice instanceof BittyContainer) {
             foreach ($choice->getChoices() as $item) {
                 $this->set($item);
@@ -95,7 +137,7 @@ class Container implements BittyContainer
             return $this;
         }
 
-        $this->validator->validateChoice($choice);
+        $this->getValidator()->validateChoice($choice);
         $this->selected |= $choice->value;
 
         return $this;
@@ -103,6 +145,8 @@ class Container implements BittyContainer
 
     public function setAll(): BittyContainer
     {
+        $this->requiresClass();
+
         // tidy this up, there's a neater way I suspect
         $this->selected = array_reduce(
             $this->class::cases(),
@@ -115,12 +159,10 @@ class Container implements BittyContainer
 
     public function unset(array|BittyContainer|BittyEnum $choice): BittyContainer
     {
-        if ($choice instanceof BittyContainer) {
-            foreach ($choice->getChoices() as $item) {
-                $this->unset($item);
-            }
+        $this->requiresClass();
 
-            return $this;
+        if ($choice instanceof BittyContainer) {
+            $choice = $choice->getChoices();
         }
 
         if (is_array($choice)) {
@@ -131,7 +173,8 @@ class Container implements BittyContainer
             return $this;
         }
 
-        $this->validator->validateChoice($choice);
+        $this->getValidator()->validateChoice($choice);
+
         $this->selected &= ~$choice->value;
 
         return $this;
@@ -139,7 +182,7 @@ class Container implements BittyContainer
 
     public static function fromArrayOfEnums(string $class, array $choices): BittyContainer
     {
-        $container = new self($class);
+        $container = app()->makeWith(BittyContainer::class, ['class' => $class]);
 
         foreach ($choices as $choice) {
             $container->set($choice);
