@@ -33,15 +33,15 @@ class Validator implements BittyValidator
         return $this;
     }
 
-    public function validateClass(string $class): BittyValidator
+    public function validateCaseName(string $name): BittyValidator
     {
         $validator = CoreValidator::make(
-            ['class' => $class],
-            ['class' => new Rules\ClassType],
+            ['name' => $name],
+            ['name' => new Rules\CaseName],
         );
 
         if ($validator->fails()) {
-            throw new InvalidClassException($validator->getMessageBag()->first());
+            throw new InvalidCaseException($validator->getMessageBag()->first());
         }
 
         return $this;
@@ -63,28 +63,25 @@ class Validator implements BittyValidator
         return $this;
     }
 
-    public function validateValues(string $class): BittyValidator
-    {
-        $validator = CoreValidator::make(
-            ['class' => $class],
-            ['class' => [
-                new Rules\PowerOfTwo,
-                new Rules\InOrder,
-                new Rules\StartAtOne,
-            ]]);
-
-        if ($validator->fails()) {
-            throw new InvalidValueException($validator->getMessageBag()->first());
-        }
-
-        return $this;
-    }
-
     public function validateChoice(BittyEnum $choice, ?string $class = null): BittyValidator
     {
         $validator = CoreValidator::make(
             ['choice' => $choice],
             ['choice' => new Rules\MatchClass($class ?? $this->class)]
+        );
+
+        if ($validator->fails()) {
+            throw new InvalidClassException($validator->getMessageBag()->first());
+        }
+
+        return $this;
+    }
+
+    public function validateClass(string $class): BittyValidator
+    {
+        $validator = CoreValidator::make(
+            ['class' => $class],
+            ['class' => new Rules\ClassType],
         );
 
         if ($validator->fails()) {
@@ -126,15 +123,18 @@ class Validator implements BittyValidator
         return $this;
     }
 
-    public function validateCaseName(string $name): BittyValidator
+    public function validateValues(string $class): BittyValidator
     {
         $validator = CoreValidator::make(
-            ['name' => $name],
-            ['name' => new Rules\CaseName],
-        );
+            ['class' => $class],
+            ['class' => [
+                new Rules\PowerOfTwo,
+                new Rules\InOrder,
+                new Rules\StartAtOne,
+            ]]);
 
         if ($validator->fails()) {
-            throw new InvalidCaseException($validator->getMessageBag()->first());
+            throw new InvalidValueException($validator->getMessageBag()->first());
         }
 
         return $this;

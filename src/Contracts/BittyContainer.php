@@ -8,7 +8,6 @@ namespace MatthewPageUK\BittyEnums\Contracts;
  * A container for holding and querying bitwise enum cases.
  *
  * @method BittyContainer clear()
- * @method BittyContainer fromArrayOfEnums(string $class, array $choices)
  * @method BittyContainer getChoices()
  * @method BittyValidator getValidator()
  * @method int getValue()
@@ -19,6 +18,7 @@ namespace MatthewPageUK\BittyEnums\Contracts;
  * @method BittyContainer setAll()
  * @method BittyContainer setClass(string $class)
  * @method BittyContainer unset(array|BittyContainer|BittyEnum $choice)
+ * @method BittyContainer fromArrayOfEnums(string $class, array $choices)
  */
 interface BittyContainer
 {
@@ -86,7 +86,7 @@ interface BittyContainer
     /**
      * Create and return a new container from an array of enums.
      *
-     * @todo ????
+     * @todo WIP
      *
      * @throws BittyEnumException
      */

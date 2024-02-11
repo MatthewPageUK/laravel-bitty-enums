@@ -24,21 +24,6 @@ class Container implements BittyContainer, Iterator
         }
     }
 
-    protected function setValidator(string $class): BittyContainer
-    {
-        $this->validator = app()->makeWith(BittyValidator::class, ['class' => $class]);
-
-        return $this;
-    }
-
-    public function setClass(string $class): BittyContainer
-    {
-        $this->setValidator($class);
-        $this->class = $class;
-
-        return $this;
-    }
-
     public function clear(): BittyContainer
     {
         $this->selected = 0;
@@ -55,14 +40,14 @@ class Container implements BittyContainer, Iterator
         });
     }
 
-    public function getValue(): int
-    {
-        return $this->selected;
-    }
-
     public function getValidator(): BittyValidator
     {
         return $this->validator;
+    }
+
+    public function getValue(): int
+    {
+        return $this->selected;
     }
 
     public function has(BittyEnum $choice): bool
@@ -72,25 +57,6 @@ class Container implements BittyContainer, Iterator
             ->validateChoice($choice);
 
         return $this->selected & $choice->value;
-    }
-
-    public function hasAny(array|BittyContainer $choices): bool
-    {
-        $this->requiresClass();
-
-        // @todo - validateChoices()
-
-        if ($choices instanceof BittyContainer) {
-            $choices = $choices->getChoices();
-        }
-
-        foreach ($choices as $choice) {
-            if ($this->has($choice)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public function hasAll(array|BittyContainer $choices): bool
@@ -114,13 +80,23 @@ class Container implements BittyContainer, Iterator
         return true;
     }
 
-    protected function requiresClass(): BittyContainer
+    public function hasAny(array|BittyContainer $choices): bool
     {
-        if ($this->class === null) {
-            throw new InvalidClassException('Invalid BittyEnum - container has no class, can not update values');
+        $this->requiresClass();
+
+        // @todo - validateChoices()
+
+        if ($choices instanceof BittyContainer) {
+            $choices = $choices->getChoices();
         }
 
-        return $this;
+        foreach ($choices as $choice) {
+            if ($this->has($choice)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function set(array|BittyContainer|BittyEnum $choice): BittyContainer
@@ -165,6 +141,14 @@ class Container implements BittyContainer, Iterator
         return $this;
     }
 
+    public function setClass(string $class): BittyContainer
+    {
+        $this->setValidator($class);
+        $this->class = $class;
+
+        return $this;
+    }
+
     public function unset(array|BittyContainer|BittyEnum $choice): BittyContainer
     {
         $this->requiresClass();
@@ -185,6 +169,30 @@ class Container implements BittyContainer, Iterator
         $this->getValidator()->validateChoice($choice);
 
         $this->selected &= ~$choice->value;
+
+        return $this;
+    }
+
+
+    /**
+     * Set the validator instance for the container
+     * and validate the provided class
+     */
+    protected function setValidator(string $class): BittyContainer
+    {
+        $this->validator = app()->makeWith(BittyValidator::class, ['class' => $class]);
+
+        return $this;
+    }
+
+    /**
+     * Ensure the container has a class set
+     */
+    protected function requiresClass(): BittyContainer
+    {
+        if ($this->class === null) {
+            throw new InvalidClassException('Invalid BittyEnum - container has no class, can not update values');
+        }
 
         return $this;
     }

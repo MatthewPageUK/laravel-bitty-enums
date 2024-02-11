@@ -37,11 +37,11 @@ interface BittyValidator
     public function setClass(string $class): BittyValidator;
 
     /**
-     * Validate the class is of correct type (BittyEnum Interface)
+     * Validate the case name is a valid PHP constant name.
      *
      * @throws BittyEnumException
      */
-    public function validateClass(string $class): BittyValidator;
+    public function validateCaseName(string $name): BittyValidator;
 
     /**
      * Validate the number of cases.
@@ -49,14 +49,6 @@ interface BittyValidator
      * @throws BittyEnumException
      */
     public function validateCases(string $class): BittyValidator;
-
-    /**
-     * Validate the values are powers of two, in order and
-     * start at one.
-     *
-     * @throws BittyEnumException
-     */
-    public function validateValues(string $class): BittyValidator;
 
     /**
      * Validate the choice matches either the base class or the
@@ -67,6 +59,13 @@ interface BittyValidator
     public function validateChoice(BittyEnum $choice, ?string $class = null): BittyValidator;
 
     /**
+     * Validate the class is of correct type (BittyEnum Interface)
+     *
+     * @throws BittyEnumException
+     */
+    public function validateClass(string $class): BittyValidator;
+
+    /**
      * Validate the scope query to ensure the column is cast to
      * a BittyEnum and the choice is of the correct type.
      *
@@ -75,9 +74,11 @@ interface BittyValidator
     public function validateQuery(Builder $query, string $column, BittyEnum $choice): BittyValidator;
 
     /**
-     * Validate the case name is a valid PHP constant name.
+     * Validate the values are powers of two, in order and
+     * start at one.
      *
      * @throws BittyEnumException
      */
-    public function validateCaseName(string $name): BittyValidator;
+    public function validateValues(string $class): BittyValidator;
+
 }
