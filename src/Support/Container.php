@@ -84,7 +84,7 @@ class Container implements BittyContainer, Iterator
     {
         $this->requiresClass();
 
-        // @todo - validateChoices()
+        // @todo - validateChoices() then use bitwise operator to check if any are set
 
         if ($choices instanceof BittyContainer) {
             $choices = $choices->getChoices();
