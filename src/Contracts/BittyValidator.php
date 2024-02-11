@@ -80,5 +80,4 @@ interface BittyValidator
      * @throws BittyEnumException
      */
     public function validateValues(string $class): BittyValidator;
-
 }
