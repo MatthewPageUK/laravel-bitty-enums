@@ -4,6 +4,7 @@ namespace MatthewPageUK\BittyEnums\Support;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator as CoreValidator;
+use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
 use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 use MatthewPageUK\BittyEnums\Contracts\BittyValidator;
 use MatthewPageUK\BittyEnums\Exceptions\InvalidCaseException;
@@ -18,13 +19,19 @@ class Validator implements BittyValidator
         protected ?string $class = null
     ) {
         if ($class) {
-            $this->validateClass($class)
-                ->validateCases($class)
-                ->validateValues($class);
+            $this->setClass($class);
         }
     }
 
-    // set class
+    public function setClass(string $class): BittyValidator
+    {
+        $this->validateClass($class)
+            ->validateCases($class)
+            ->validateValues($class)
+            ->class = $class;
+
+        return $this;
+    }
 
     public function validateClass(string $class): BittyValidator
     {
@@ -87,8 +94,18 @@ class Validator implements BittyValidator
         return $this;
     }
 
-    public function validateQuery(Builder $query, string $column, BittyEnum $choice): BittyValidator
+    public function validateQuery(Builder $query, string $column, array|BittyContainer|BittyEnum $choice): BittyValidator
     {
+        if ($choice instanceof BittyEnum) {
+            $choice = [$choice];
+        }
+
+        if ($choice instanceof BittyContainer) {
+            $choice = $choice->getChoices();
+        }
+
+        $choice = array_map(fn ($value) => ['choice' => $value], $choice);
+
         $validator = CoreValidator::make(
             [
                 'query' => $query,
@@ -98,12 +115,26 @@ class Validator implements BittyValidator
                     new Rules\ModelHasColumn($column),
                     new Rules\ColumnHasCast($column),
                 ],
-                'choice' => new Rules\MatchCastClass($query, $column),
+                'choice.*.choice' => new Rules\MatchCastClass($query, $column),
             ]
         );
 
         if ($validator->fails()) {
             throw new InvalidQueryException($validator->getMessageBag()->first());
+        }
+
+        return $this;
+    }
+
+    public function validateCaseName(string $name): BittyValidator
+    {
+        $validator = CoreValidator::make(
+            ['name' => $name],
+            ['name' => new Rules\CaseName],
+        );
+
+        if ($validator->fails()) {
+            throw new InvalidCaseException($validator->getMessageBag()->first());
         }
 
         return $this;

@@ -5,13 +5,9 @@ use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
 use MatthewPageUK\BittyEnums\Tests\Enums\Good;
 use Tests\Models\Product;
 
-it('can cast from a model attribute', function () {
-    $product = Product::find(1);
-
-    expect($product->colours)->toBeInstanceOf(BittyContainer::class);
-    expect($product->colours->getValue())->toBe(Good\Colour::Red->value);
-});
-
+/**
+ * Model attribute cast to BittyContainer
+ */
 it('can cast to a model attribute', function () {
 
     $container = app()->make(BittyContainer::class)

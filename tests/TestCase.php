@@ -16,9 +16,7 @@ class TestCase extends Orchestra
     protected function setUp(): void
     {
         $this->database = getenv('DB_CONNECTION') ?: 'sqlite';
-
         parent::setUp();
-
         $this->migrateDatabase();
         $this->seedDatabase();
 

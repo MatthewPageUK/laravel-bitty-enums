@@ -28,6 +28,8 @@ composer require matthewpageuk/laravel-bitty-enums
 - [Using the Bitty Enum Container](#using-the-bitty-enum-container)
 - [Model Attribute Cast](#model-attribute-cast)
 - [Scoped Queries](#scoped-queries)
+- [Config settings](#config-settings)
+
 
 ## Create an Enum
 
@@ -218,7 +220,11 @@ if ($product->colours->hasAny($customerPreferences)) {
 
 ## Scoped Queries
 
-To use the scoped queries you need to use the `MatthewPageUK\BittyEnums\Traits\WithBittyEnumQueryScope` trait in your model.
+To access the scoped queries in your model you need to use the `MatthewPageUK\BittyEnums\Traits\WithBittyEnumQueryScope` trait.
+
+You should also ensure your model has the [BittyEnumCast](#model-attribute-cast) set on the column you want to query.
+
+### Example Model
 
 ```php
 use App\Enums\Colours;
@@ -232,7 +238,7 @@ class Product extends Model
 }
 ```
 
-You can now use the following scope queries:
+### Example Queries
 
 ```php
 // Products with the colour blue
@@ -253,11 +259,10 @@ $customerPreferences = new BittyEnumContainer(Colours::class)
     ->set(Colours::Red);
 
 Product::whereBittyEnumDoesntHaveAny('colours', $customerPreferences)->get();
-
-...xxx
 ```
+Methods accepting multiple choices can be an array of `BittyEnum` or a `BittyEnumContainer`.
 
-
+A `BittyEnumException` will be thrown if you pass the incorrect type or invalid enum to the query scope.
 
 ## Config settings
 

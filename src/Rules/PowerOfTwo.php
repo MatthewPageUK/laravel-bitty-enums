@@ -5,6 +5,9 @@ namespace MatthewPageUK\BittyEnums\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
+/**
+ * Validates the class has values that are a power of two
+ */
 class PowerOfTwo implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void

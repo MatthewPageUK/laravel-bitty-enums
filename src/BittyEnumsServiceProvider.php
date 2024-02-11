@@ -22,9 +22,5 @@ class BittyEnumsServiceProvider extends ServiceProvider
                 MakeBittyEnum::class,
             ]);
         }
-
-        // $this->publishes([
-        //     __DIR__.'/../config/bitty-enums.php' => config_path('bitty-enums.php'),
-        // ], 'bitty-enums-config');
     }
 }

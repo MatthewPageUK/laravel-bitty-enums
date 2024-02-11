@@ -47,7 +47,7 @@ it('throws an exception if the container enum class is invalid', function () {
 
 })->throws(BittyEnumException::class);
 
-// WIP
+// WIP - static method
 // ---
 // it('can create a new container from array of enums', function () {
 //     $container = Support\Container::fromArrayOfEnums(Good\Warning::class, [

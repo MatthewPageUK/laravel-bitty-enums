@@ -34,6 +34,18 @@ it('throws exception if wrong enum type is set', function () {
 })->throws(BittyEnumException::class);
 
 /**
+ * Setting all the values
+ */
+it('can set all values', function () {
+    $total = array_reduce(Good\Warning::cases(), fn ($carry, $item) => $carry + $item->value, 0);
+    $container = app()->make(BittyContainer::class)
+        ->setClass(Good\Warning::class)
+        ->setAll();
+
+    expect($container->getValue())->toBe($total);
+});
+
+/**
  * Setting from an array of Enums
  */
 it('can accept an array of enums', function () {

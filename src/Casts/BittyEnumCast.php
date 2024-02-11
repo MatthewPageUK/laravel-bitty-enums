@@ -6,6 +6,11 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
 
+/**
+ * Model Cast for Bitty Enums
+ *
+ * Casts the integer column to a BittyContainer and vice versa
+ */
 class BittyEnumCast implements CastsAttributes
 {
     public function __construct(

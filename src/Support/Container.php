@@ -2,13 +2,17 @@
 
 namespace MatthewPageUK\BittyEnums\Support;
 
+use Iterator;
 use MatthewPageUK\BittyEnums\Contracts\BittyContainer;
 use MatthewPageUK\BittyEnums\Contracts\BittyEnum;
 use MatthewPageUK\BittyEnums\Contracts\BittyValidator;
 use MatthewPageUK\BittyEnums\Exceptions\InvalidClassException;
+use MatthewPageUK\BittyEnums\Support\Traits\WithContainerIterator;
 
-class Container implements BittyContainer
+class Container implements BittyContainer, Iterator
 {
+    use WithContainerIterator;
+
     protected BittyValidator $validator;
 
     public function __construct(
@@ -74,6 +78,8 @@ class Container implements BittyContainer
     {
         $this->requiresClass();
 
+        // @todo - validateChoices()
+
         if ($choices instanceof BittyContainer) {
             $choices = $choices->getChoices();
         }
@@ -120,6 +126,7 @@ class Container implements BittyContainer
     public function set(array|BittyContainer|BittyEnum $choice): BittyContainer
     {
         $this->requiresClass();
+        $this->rewind();
 
         if ($choice instanceof BittyContainer) {
             foreach ($choice->getChoices() as $item) {
@@ -146,6 +153,7 @@ class Container implements BittyContainer
     public function setAll(): BittyContainer
     {
         $this->requiresClass();
+        $this->rewind();
 
         // tidy this up, there's a neater way I suspect
         $this->selected = array_reduce(
@@ -160,6 +168,7 @@ class Container implements BittyContainer
     public function unset(array|BittyContainer|BittyEnum $choice): BittyContainer
     {
         $this->requiresClass();
+        $this->rewind();
 
         if ($choice instanceof BittyContainer) {
             $choice = $choice->getChoices();

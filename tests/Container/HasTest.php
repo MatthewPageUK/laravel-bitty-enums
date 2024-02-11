@@ -48,10 +48,10 @@ it('can check if the container has any of the values', function () {
     expect($container->hasAny($empty))->toBeFalse();
 });
 
-// Throws exception is wrong enum.....
-
-// HasAll
-it('can check if all of the values are set from hasAll()', function () {
+/**
+ * Checking all values
+ */
+it('can check if the container has all the values', function () {
     $empty = app()->make(BittyContainer::class)
         ->setClass(Good\Warning::class);
 

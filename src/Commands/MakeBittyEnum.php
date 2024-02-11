@@ -3,11 +3,11 @@
 namespace MatthewPageUK\BittyEnums\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Support\Facades\Validator;
-use MatthewPageUK\BittyEnums\Rules;
+use MatthewPageUK\BittyEnums\Contracts\BittyValidator;
+use MatthewPageUK\BittyEnums\Exceptions\InvalidCaseException;
 
 /**
- * Create a BittyEnum class along with the cases
+ * Create a BittyEnum class along with the cases input by the user.
  *
  * Overide the GeneratorCommand to add the cases to the stub
  */
@@ -105,7 +105,9 @@ class MakeBittyEnum extends GeneratorCommand
 
         while (count($cases) < config('bitty-enums.max_bits')) {
 
-            $input = $this->components->ask('Enter a name for case '.count($cases) + 1 .', or blank to continue.');
+            $input = $this->components->ask(
+                sprintf('Enter a name for case %d, or blank to continue.', count($cases) + 1)
+            );
 
             if ($input == '') {
                 break;
@@ -130,16 +132,17 @@ class MakeBittyEnum extends GeneratorCommand
     }
 
     /**
-     * Validate the case name
+     * Validate the case name via the BittyValidator
      */
     protected function validateCaseName(string $name): bool
     {
-        $validator = Validator::make(
-            ['name' => $name],
-            ['name' => new Rules\CaseName],
-        );
+        try {
+            app()->make(BittyValidator::class)->validateCaseName($name);
+        } catch (InvalidCaseException $e) {
+            return false;
+        }
 
-        return $validator->passes();
+        return true;
     }
 
     /**
